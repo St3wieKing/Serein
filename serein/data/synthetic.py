@@ -64,7 +64,10 @@ def generate_ohclv(
     else:
         chain = (regime_chain * (periods // len(regime_chain) + 1))[:periods]
 
-    ann_to_bar = {"h": 252 * 6.5, "30min": 252 * 13, "d": 252}[freq]
+    ann_to_bar = {
+        "h": 252 * 6.5, "30min": 252 * 13, "15min": 252 * 26,
+        "5min": 252 * 78, "d": 252,
+    }[freq]
     dt_per_year = ann_to_bar
     dt = 1.0 / dt_per_year
 

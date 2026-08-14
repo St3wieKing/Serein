@@ -35,6 +35,11 @@ Tier key:
 | S19 | Reddit thread on Matthew Scriv / “Chrome” | 5 | 2026-03-19 | 2026-08-14 | Anonymous OTE/IFVG/ICT interpretation | Very low; hypothesis-generation only |
 | S20 | Sullivan, Timmermann & White, “Data-Snooping, Technical Trading Rule Performance, and the Bootstrap,” JF 1999 | 1 | 1999 | 2026-08-14 | Technical-rule selection must adjust for the entire searched universe | High |
 | S21 | Grimes, *The Art and Science of Technical Analysis*, Wiley | 3 | 2012 | 2026-08-14 | Pullback/failure/breakout templates and testable market-structure framing | Medium; practitioner hypothesis source |
+| S22 | Myfxbook Quantum Athena account 12074640 | 4 | 2025-2026 | 2026-08-14 | Real-account label, aggregate trades/returns/deposits/DD; closed/open trades private | Medium-high for displayed monitor; no audit/capacity proof |
+| S23 | MQL5 Quantum Athena signal 2348372 | 4 | 2025-2026 | 2026-08-14 | Current account economics, 782 deals, 95% long, 36.78% equity DD, 41.14% load, frequent-deal warnings | Medium-high for platform monitor |
+| S24 | SignalStart Quantum Athena 289445 | 4 | 2025-2026 | 2026-08-14 | Vendor explicitly describes six-strategy XAUUSD trend-following grid; ten recent public trades | Medium-high for description/trade rows |
+| S25 | MQL5 Quantum Athena product 173058 | 4 | 2026 | 2026-08-14 | Original product no longer available for purchase | High for listing status; reason unknown |
+| S26 | Third-party Athena reviews/backtests (FXProSystems, ForexRobotLab, CheaperForex) | 5 | 2026 | 2026-08-14 | Conflicting claims about grid blow-ups, historical tests and product quality | Low; allegations/marketing only |
 
 **Staleness policy:** market-structure numbers (spreads, costs) are
 re-verified at research milestones; anything older than 12 months is
