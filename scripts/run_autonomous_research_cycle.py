@@ -54,10 +54,12 @@ def main():
     m=result[0].metrics
     followups=loop.propose_next({"weak_setup":"opening_breakout",
                                  "issue":"fresh replication and cost stress failed",
-                                 "n_trades":m.get("oos_trades",0)},dataset_id=dataset_id)
+                                 "n_trades":m.get("oos_trades",0)},
+                                dataset_id="FRESH-DATASET-REQUIRED")
     payload={"outcome":result[0].to_dict(),"review":result[1].__dict__ if result[1] else None,
              "followup_queue":[p.to_dict() for p in followups],
-             "counts":db.counts(),"budget":db.budget(dataset_id)}
+             "counts":db.counts(),"tested_budget":db.budget(dataset_id),
+             "next_dataset_budget":db.budget("FRESH-DATASET-REQUIRED")}
     (artifacts/"autonomous_cycle_report.json").write_text(json.dumps(payload,indent=2,default=str))
     print(json.dumps(payload,indent=2,default=str)); db.close()
 

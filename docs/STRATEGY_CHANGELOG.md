@@ -12,6 +12,10 @@
   are superseded until regenerated.
 - Added system autopsy, 520 structured research questions and 1,000 structured
   adversarial questions. Live execution remains permanently disabled.
+- Frozen opening-range challenger failed a fresh synthetic cycle and two sealed
+  public external samples; status changed to REJECTED_EXTERNAL_REPLICATION.
+- On a third public dataset no training candidate passed, so the reserved
+  40-session holdout was deliberately left SEALED and uninspected.
 
 ## v2.0.0 — 2026-08-14
 

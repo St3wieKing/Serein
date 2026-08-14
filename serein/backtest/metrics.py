@@ -193,13 +193,15 @@ def decompose(trades_df: pd.DataFrame, eq_df: pd.DataFrame,
     out["by_exit_reason"] = {
         str(k): group_stats(g) for k, g in trades_df.groupby(trades_df["exit_reason"])
     }
+    exit_time = trades_df["exit_time"]
+    exit_local = exit_time.dt.tz_localize(None) if exit_time.dt.tz is not None else exit_time
     out["by_month"] = {
         str(k): group_stats(g)
-        for k, g in trades_df.groupby(trades_df["exit_time"].dt.to_period("M"))
+        for k, g in trades_df.groupby(exit_local.dt.to_period("M"))
     }
     out["by_year"] = {
         str(k): group_stats(g)
-        for k, g in trades_df.groupby(trades_df["exit_time"].dt.year)
+        for k, g in trades_df.groupby(exit_local.dt.year)
     }
     out["by_symbol"] = {
         str(k): group_stats(g) for k, g in trades_df.groupby(trades_df["symbol"])

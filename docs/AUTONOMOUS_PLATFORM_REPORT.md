@@ -61,8 +61,9 @@ The ReviewAgent returned **NOT_APPROVED** because real data, 100 OOS trades,
 positive lower expectancy, paper evidence and multiple red-team results were
 missing. The system recorded the rejection and automatically queued three next
 research hypotheses: remove the setup, test turnover reduction, and test a
-stricter regime gate. Those are hypotheses, not promotions; dataset search
-budget increased from one to four experiments.
+stricter regime gate. They are assigned to `FRESH-DATASET-REQUIRED`, not the
+revealed dataset. Those are hypotheses, not promotions or permission to recycle
+OOS data.
 
 ## Paper execution
 
@@ -117,6 +118,22 @@ can move ACTIVE → DEGRADED → QUARANTINED.
 Exit slippage had been reported but not deducted from backtest cash/P&L. It now
 changes the actual exit fill. PaperBroker commissions are also deducted from
 cash. Earlier performance artifacts are explicitly marked superseded.
+
+## External public-data attempt
+
+Two separate one-shot tests used public Alpha-Vantage-derived minute fragments,
+strictly cleaned and aggregated to five minutes. Each last-40-session holdout was
+sealed and revealed once. AAPL/JPM produced four trades, −0.14%, Sharpe −2.39,
+PF 0.28 and −0.51R. A fresh AAL/AMD/BAC holdout produced eight trades, −0.28%,
+Sharpe −2.08, PF 0.34 and −0.34R. Both failed 2× costs and slippage. The source is
+unverified and samples are insufficient, but they provide no support. Both
+holdouts are permanently contaminated and the OR challenger is rejected.
+
+A third independent C/CAT/CSCO dataset reserved its final 40 sessions. On the
+first 79 sessions, OR generated zero trades, VWAP pullback generated one near-flat
+loss and VWAP reversion generated four losing trades. Because no training
+candidate passed, the system did **not reveal the final 40 sessions**. That
+holdout remains sealed instead of being wasted on strategy fishing.
 
 ## Remaining blockers
 

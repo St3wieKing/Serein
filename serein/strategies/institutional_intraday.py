@@ -185,6 +185,7 @@ class OpeningRangeChallenger(Strategy):
     """
     name = "opening_range_challenger_v1"
     version = "1.0.0-selection-contaminated"
+    status = "REJECTED_EXTERNAL_REPLICATION"
     locked_params = {"fast": 20, "slow": 60, "or_bars": 6,
                      "relvol_min": 1.15, "target_r_breakout": 2.0}
 

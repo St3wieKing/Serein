@@ -144,10 +144,12 @@ simulator that contains planted trends.
 
 ## What is strongest now
 
-The research does **not** support the complex three-setup router or either ML
-model. The only component deserving another experiment is the simple
-opening-range continuation setup. Even it requires a new real-data holdout and
-failed the 5× slippage shock.
+Nothing. The complex router and both ML models failed. The opening-range setup
+was then frozen and tested on two separately sealed public external samples:
+AAPL/JPM returned −0.14% with four trades, and AAL/AMD/BAC returned −0.28% with
+eight trades. Both had negative expectancy and failed 2× costs/slippage. The
+public data are unverified and samples are small, but they provide no support.
+The challenger is now `REJECTED_EXTERNAL_REPLICATION`.
 
 ## What is required next
 

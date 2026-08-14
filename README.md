@@ -49,10 +49,12 @@ path**; every decision is journaled.
 No strategy is approved. Earlier v0/v1 numerical reports are marked superseded
 because the system autopsy found that reported exit slippage did not alter exit
 cash/P&L. The correction made all current intraday candidates weaker: the
-validation-selected ML model lost −0.13% in locked synthetic OOS; the post-OOS
-opening-range challenger gained +1.07% but its bootstrap expectancy interval
-includes zero, it failed 5× costs and 2× slippage reduced return to effectively
-zero. Direct ML direction models remain near chance.
+validation-selected ML model lost −0.13% in locked synthetic OOS. The post-OOS
+opening-range challenger gained +1.07% synthetically but its expectancy interval
+included zero and costs erased it. It then lost on one fresh synthetic cycle and
+both sealed public external samples, so it is rejected. On a third public dataset
+no setup passed training, and the reserved holdout remained sealed. Direct ML
+direction models remain near chance.
 
 **These results validate the engineering, not an edge.** No claim about
 real markets is made. The framework's job is to find out whether a

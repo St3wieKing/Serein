@@ -103,7 +103,8 @@ class RiskEngine:
                 self.trip(C.KS_DRAWDOWN, f"daily loss limit hit ({day_pnl_pct:.2%})")
 
         # weekly loss limit
-        week_start = t.to_period("W").start_time
+        period_time = t.tz_localize(None) if t.tzinfo is not None else t
+        week_start = period_time.to_period("W").start_time
         if self._week_start_equity is None or self._week_start_equity[0] != week_start:
             self._week_start_equity = (week_start, equity)
         else:
