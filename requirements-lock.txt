@@ -1,0 +1,8 @@
+# Reproduced research environment, Python 3.11, 2026-08-14.
+# Direct dependencies are exact; production builds should also hash-lock wheels.
+numpy==2.4.6
+pandas==3.0.5
+matplotlib==3.11.1
+scikit-learn==1.9.0
+pytest==9.1.1
+tabulate==0.10.0

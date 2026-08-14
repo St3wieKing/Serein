@@ -20,6 +20,7 @@ sys.path.insert(0, str(ROOT))
 from serein.backtest.engine import Backtester
 from serein.backtest.robustness import cscv_pbo
 from serein.backtest.stress import stress_costs, stress_latency, stress_slippage
+from serein.backtest.uncertainty import block_bootstrap_equity, trade_expectancy_bootstrap
 from serein.config import BacktestConfig, CostModel, RiskLimits, SizingParams
 from serein.data.intraday_synthetic import generate_intraday_universe
 from serein.strategies.institutional_intraday import (
@@ -131,6 +132,13 @@ def main():
     # and fresh synthetic seeds are reported to decide whether it deserves a
     # future real-data experiment—not to claim an edge.
     orb_sig = filtered(sigs["rules"], {"opening_breakout"})
+    orb_result = Backtester(cfg).run(test_b, orb_sig)
+    orb_uncertainty = {
+        "equity": block_bootstrap_equity(orb_result.equity_curve.equity,
+                                           block=5, n_boot=2000, seed=42),
+        "expectancy": trade_expectancy_bootstrap(orb_result.trades,
+                                                   n_boot=5000, seed=42),
+    }
     orb_costs = stress_costs(test_b, orb_sig, cfg, multipliers=(1, 2, 5))
     orb_slips = stress_slippage(test_b, orb_sig, cfg, multipliers=(1, 2, 5))
     orb_latency = stress_latency(test_b, orb_sig, cfg, delays=(0, 1, 3))
@@ -219,6 +227,12 @@ This component was identified after inspecting the ablation table. It is therefo
 selection-contaminated and cannot replace the validation-selected champion. Fresh
 synthetic seeds are only a robustness screen for the next research cycle.
 
+### Challenger uncertainty
+
+```json
+{json.dumps(orb_uncertainty, indent=2, default=float)}
+```
+
 ### Challenger stress: costs
 
 {orb_costs.to_markdown(index=False)}
@@ -269,7 +283,7 @@ correct objective is bounded loss, graceful degradation, and fail-closed behavio
     val.to_csv(ART/"institutional_intraday_validation.csv", index=False)
     test.to_csv(ART/"institutional_intraday_oos.csv", index=False)
     payload = {"champion": champion, "decision": decision, "diagnostics": diagnostics,
-               "pbo": pbo}
+               "pbo": pbo, "opening_range_uncertainty": orb_uncertainty}
     (ART/"institutional_intraday_summary.json").write_text(json.dumps(payload, indent=2, default=float))
     print(report)
 

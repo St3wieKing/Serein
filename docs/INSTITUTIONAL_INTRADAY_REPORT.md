@@ -112,6 +112,12 @@ subperiods are too small for strong inference.
 | 1-bar latency | +1.16% | 3.82 | positive |
 | 3-bar latency | +0.92% | 3.33 | positive |
 
+A five-day block bootstrap on the 79 synthetic OOS days estimated a 95% return
+interval of +0.05% to +2.91% and a 2.25% probability of non-positive return.
+Trade-expectancy bootstrap over 57 trades estimated +0.11R to +0.67R. These
+intervals quantify this simulator sample; they do not correct the post-OOS
+selection or turn planted synthetic structure into market evidence.
+
 Fresh 120-day synthetic worlds returned −0.24%, +0.60%, +0.88%, +1.12% and
 +0.79%. One of five failed, confirming that this is not bulletproof even in the
 simulator that contains planted trends.

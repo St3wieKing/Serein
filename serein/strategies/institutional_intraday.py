@@ -176,6 +176,37 @@ class InstitutionalIntradayStrategy(Strategy):
         return sig
 
 
+class OpeningRangeChallenger(Strategy):
+    """Frozen post-OOS challenger; never described as an approved strategy.
+
+    The specification is intentionally a thin restriction of
+    InstitutionalIntradayStrategy. Parameters are locked to prevent silent
+    retuning after the synthetic OOS result was viewed.
+    """
+    name = "opening_range_challenger_v1"
+    version = "1.0.0-selection-contaminated"
+    locked_params = {"fast": 20, "slow": 60, "or_bars": 6,
+                     "relvol_min": 1.15, "target_r_breakout": 2.0}
+
+    def __init__(self, params=None):
+        if params:
+            raise ValueError("OpeningRangeChallenger parameters are frozen")
+        super().__init__(self.locked_params.copy())
+
+    def generate(self, bars, regime=None):
+        return self.generate_universe({"S": bars})["S"]
+
+    def generate_universe(self, bars):
+        out = InstitutionalIntradayStrategy(self.locked_params).generate_universe(bars)
+        for sig in out.values():
+            reject = sig.reason != "opening_breakout"
+            sig.loc[reject, "direction"] = 0
+            sig.loc[reject, "confidence"] = 0.0
+            sig.loc[reject & ~sig.force_flat, "reason"] = "no_opening_breakout"
+            validate_signals(sig)
+        return out
+
+
 class IntradayMetaLabelStrategy(Strategy):
     """Chronologically trained setup-quality filter over deterministic signals."""
     name = "institutional_intraday_meta"
