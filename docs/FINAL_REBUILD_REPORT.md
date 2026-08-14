@@ -1,5 +1,9 @@
 # Serein Strategy v2.0 — research, destruction, simplification, rebuild
 
+> **Superseded performance artifact:** generated before the 2026-08-14 exit-fill
+> slippage accounting correction. Architecture conclusions remain useful, but
+> numerical returns must be regenerated and are not current evidence.
+
 **Date:** 2026-08-14  
 **Status:** PAPER_TRADING_ONLY · **Decision: NO CANDIDATE APPROVED**  
 **Evidence boundary:** latest v2 experiment is synthetic (26,500 hourly bars ×

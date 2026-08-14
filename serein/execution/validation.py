@@ -58,6 +58,10 @@ class OrderValidator:
         risk_new_trades_allowed: bool,
         bar_volume: float | None = None,
         now: pd.Timestamp | None = None,
+        weekly_loss_halted: bool = False,
+        strategy_approved: bool = True,
+        account_authorized: bool = True,
+        quote_required: bool = False,
     ) -> ValidationResult:
         checks: dict[str, bool] = {}
         lim = self.limits
@@ -71,14 +75,18 @@ class OrderValidator:
         checks["qty_valid"] = qty > 0
         checks["direction_valid"] = direction in (-1, 1)
 
+        checks["quote_available"] = quote is not None or not quote_required
         if quote is not None:
             spread = quote.get("spread_bps")
-            if spread is not None:
-                checks["spread_acceptable"] = spread <= lim.max_spread_bps
-            else:
-                checks["spread_acceptable"] = True
+            if spread is None and quote.get("bid") and quote.get("ask"):
+                mid = (quote["bid"] + quote["ask"]) / 2
+                spread = (quote["ask"] - quote["bid"]) / mid * 10_000 if mid > 0 else np.inf
+            checks["spread_acceptable"] = spread is None or spread <= lim.max_spread_bps
+            qt = quote.get("time")
+            checks["quote_fresh"] = not (now is not None and qt is not None) or qt >= now-pd.Timedelta(seconds=30)
         else:
-            checks["spread_acceptable"] = True
+            checks["spread_acceptable"] = not quote_required
+            checks["quote_fresh"] = not quote_required
 
         notional = price * qty
         checks["size_acceptable"] = notional <= equity * lim.max_per_symbol_frac
@@ -89,10 +97,15 @@ class OrderValidator:
             for o in open_orders
         )
         checks["daily_loss_ok"] = not daily_loss_halted
+        checks["weekly_loss_ok"] = not weekly_loss_halted
         checks["risk_engine_ok"] = risk_new_trades_allowed
         checks["broker_healthy"] = broker_healthy
+        checks["strategy_approved"] = strategy_approved
         checks["model_approved"] = model_approved
+        checks["account_authorized"] = account_authorized
         checks["leverage_ok"] = (notional / max(equity, 1e-9)) <= lim.max_leverage
+        checks["liquidity_acceptable"] = (bar_volume is None or bar_volume <= 0
+                                           or qty <= bar_volume*self.sizing.max_adv_share)
 
         ok = all(checks.values())
         return ValidationResult(ok=ok, checks=checks)

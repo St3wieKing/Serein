@@ -82,6 +82,7 @@ def generate_dashboard(
     out_path: str | Path,
     title: str = "Serein — research dashboard",
     extra_sections: list[tuple[str, str]] | None = None,
+    data_label: str = "synthetic — engineering validation only",
 ) -> Path:
     eq_img = _equity_chart(res)
     heat_img = _monthly_heatmap(res)
@@ -140,7 +141,7 @@ def generate_dashboard(
             f"<h1>{title}</h1>",
             f'<p class="meta">Period {m.get("start")} → {m.get("end")} · '
             f'final equity {m.get("final_equity", 0):,.0f} · '
-            f'<b>data: synthetic — engineering validation only</b></p>',
+            f'<b>data: {data_label}</b></p>',
             '<div class="cards">' + cards + "</div>",
     ]
     for name, body in sections:

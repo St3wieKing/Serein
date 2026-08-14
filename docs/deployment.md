@@ -1,6 +1,6 @@
 # Serein — Deployment & Validation Stages
 
-## Status: PAPER_TRADING_ONLY = TRUE (hard-coded)
+## Status: PAPER_TRADING_ONLY = TRUE; LIVE_EXECUTION_ENABLED = FALSE (hard-coded)
 
 This project is in **research + paper** state. It must remain there
 while:
@@ -16,18 +16,19 @@ while:
 
 | Stage | What happens | Exit gate |
 |---|---|---|
-| 1. Historical research | hypotheses, literature, decision log | 335 questions logged |
+| 1. Historical research | hypotheses, literature, decision log | 520 structured master questions logged |
 | 2. Backtesting | event-driven, costs, risk-in-loop | leakage audit + full metrics |
 | 3. Walk-forward | locked params, embargo | OOS report |
 | 4. Out-of-sample | locked period | minimum sample + stability |
-| 5. Stress testing | costs/slippage/vol/liquidity/latency/missing | degradation tables |
-| 6. Paper trading | PaperBroker simulated fills | slippage drift report |
-| 7. Shadow mode | hypothetical trades, no orders | live-vs-research discrepancy |
-| 8. Controlled live (future) | only where lawful & authorized | human approval, broker eligibility |
+| 5. Stress and red team | costs/slippage/vol/liquidity/latency/missing/attacks | degradation and failure tables |
+| 6. Shadow mode | hypothetical decisions, structurally no orders | live-vs-research discrepancy |
+| 7. Paper trading | approved PaperBroker gateway and simulated fills | 12-week paper evidence + slippage drift |
+| 8. Controlled deployment (future) | only where lawful & authorized | independent certification and explicit authorization |
+| 9. Live execution (not implemented) | no connector exists | remains FALSE in this repository |
 
-The current codebase implements stages 1–6 tooling; stage 7 (shadow
-loop against a live feed) and stage 8 are out of scope for this
-repository state and are never silently enabled.
+The current codebase implements stage 1–5 tooling plus shadow/paper components,
+but no real feed is connected and no strategy has passed the paper promotion
+gate. Controlled deployment and live execution are unavailable.
 
 ## How to run
 

@@ -12,9 +12,12 @@ This package is a RESEARCH FRAMEWORK. It contains no live-broker adapter
 and must remain PAPER_TRADING_ONLY.
 """
 
-__version__ = "0.1.0"
+__version__ = "0.3.0"
 
 PAPER_TRADING_ONLY = True
 """Hard system-wide flag. No code path may ever transmit a real order."""
+
+LIVE_EXECUTION_ENABLED = False
+"""Permanent deployment gate. No live connector exists in this repository."""
 
 MODE = "RESEARCH"

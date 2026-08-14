@@ -1,5 +1,8 @@
 # SEREIN — FINAL RESEARCH REPORT (v0.1)
 
+> **Superseded performance artifact:** generated before the 2026-08-14 exit-fill
+> slippage accounting correction. Numerical performance is audit history only.
+
 **Date:** 2026-08-14 · **Branch:** arena/019ffdd9-serein
 **System state:** PAPER_TRADING_ONLY · Automation level 0–3 (research,
 backtest, paper). No live adapter exists.

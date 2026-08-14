@@ -1,5 +1,18 @@
 # Strategy changelog
 
+## v0.3.0 platform — 2026-08-14
+
+- Added governed autonomous Research, Experiment, Red-Team and Review agents,
+  SQLite experiment/failure/decision journals, constrained strategy factory,
+  experiment budgets, opportunity ranking and strategy health quarantine.
+- Added paper-only execution gateway, idempotency, broker reconciliation,
+  complete shadow-decision schema and strict strategy/model/account gates.
+- Fixed critical exit-slippage accounting: exit slippage now changes fill, cash
+  and P&L. Fixed PaperBroker commission booking. All earlier performance reports
+  are superseded until regenerated.
+- Added system autopsy, 520 structured research questions and 1,000 structured
+  adversarial questions. Live execution remains permanently disabled.
+
 ## v2.0.0 — 2026-08-14
 
 - Destroy/rebuild cycle: no v1 alpha rule was grandfathered.

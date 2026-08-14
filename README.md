@@ -24,9 +24,11 @@ constant.
 | Quantum Athena account forensics + safe proxy | `docs/QUANTUM_ATHENA_FORENSIC_REPORT.md`, `scripts/analyze_quantum_athena.py` |
 | Quant-fund research + institutional intraday system | `research/quant_fund_research.md`, `docs/INSTITUTIONAL_INTRADAY_REPORT.md`, `scripts/run_institutional_intraday.py` |
 | Three-round 1,500-question recursive audit | `research/recursive_review/`, `docs/RECURSIVE_REVIEW_IMPLEMENTATION.md` |
+| Master 520-question inquiry + final 1,000 adversarial challenge | `research/master_questions/` |
+| Complete autopsy + autonomous platform result | `docs/SYSTEM_AUTOPSY_REPORT.md`, `docs/AUTONOMOUS_PLATFORM_REPORT.md` |
 | Core package | `serein/` (data, features, regimes, strategies, meta, risk, backtest, ML, drift, registries, execution, reporting, dashboard) |
 | Full research pipeline | `scripts/run_research.py` |
-| Test suite (125 passing, 1 skipped) | `tests/` |
+| Test suite (137 passing, 1 skipped) | `tests/` |
 | Architecture / security / deployment / failure docs | `docs/` |
 | Run artifacts (report, dashboard, registries) | `artifacts/` (gitignored) |
 
@@ -44,12 +46,13 @@ path**; every decision is journaled.
 
 ## Honest results so far (SYNTHETIC data only)
 
-The full pipeline on 8 years of regime-switching synthetic data:
-rule ensemble Sharpe ≈ 0.09 (+2.9% total), OOS negative with only 8
-trades; ML direction models at chance (OOS AUC ≈ 0.50 vs base rate
-0.503); PBO 15%; costs 10x erode nearly all edge; latency 6 bars
-turns the small edge negative; 1% missing data produces −20% drawdowns
-under gap-through-stop modeling.
+No strategy is approved. Earlier v0/v1 numerical reports are marked superseded
+because the system autopsy found that reported exit slippage did not alter exit
+cash/P&L. The correction made all current intraday candidates weaker: the
+validation-selected ML model lost −0.13% in locked synthetic OOS; the post-OOS
+opening-range challenger gained +1.07% but its bootstrap expectancy interval
+includes zero, it failed 5× costs and 2× slippage reduced return to effectively
+zero. Direct ML direction models remain near chance.
 
 **These results validate the engineering, not an edge.** No claim about
 real markets is made. The framework's job is to find out whether a

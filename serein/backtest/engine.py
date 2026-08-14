@@ -392,17 +392,22 @@ class Backtester:
                         consecutive_losses, cfg):
         cost = cost_of_fill(cfg.costs, abs(exit_px * pos.qty), abs(pos.qty), None)
         exit_commission = cost.commission
-        exit_slippage = abs(exit_px) * cost.cost_bps / 10_000.0 * abs(pos.qty)
-        pnl = (pos.qty * (exit_px - pos.entry_price)
+        # Closing a long is a sell (negative direction); closing a short is a
+        # buy. Exit slippage must affect the actual fill and cash/PnL—not merely
+        # appear in a reporting column.
+        close_direction = -int(np.sign(pos.qty))
+        exit_fill = slippage_adjusted_price(exit_px, close_direction, cost.cost_bps)
+        exit_slippage = abs(exit_fill - exit_px) * abs(pos.qty)
+        pnl = (pos.qty * (exit_fill - pos.entry_price)
                - pos.entry_commission - exit_commission)
-        cash += pos.qty * exit_px - exit_commission
+        cash += pos.qty * exit_fill - exit_commission
         costs_total = (pos.entry_commission + exit_commission
                        + pos.entry_slippage + exit_slippage)
         trades.append({
             "trade_id": pos.trade_id, "symbol": pos.symbol,
             "direction": int(np.sign(pos.qty)),
             "entry_time": pos.entry_time, "exit_time": t,
-            "entry_price": pos.entry_price, "exit_price": exit_px,
+            "entry_price": pos.entry_price, "exit_price": exit_fill,
             "qty": abs(pos.qty), "stop": pos.stop, "target": pos.target,
             "confidence": pos.confidence, "expected_R": pos.expected_R,
             "reason": pos.reason, "exit_reason": reason,

@@ -29,6 +29,17 @@
 Monitoring (dashboard, drift, registries) observes every layer.
 **No layer can skip the risk engine; no model can modify it.**
 
+Offline candidate lifecycle is authority-separated:
+
+```text
+ResearchAgent → ExperimentQueue/Runner → RedTeamAgent → ReviewAgent
+      → deterministic promotion gate → frozen challenger → shadow/paper only
+```
+
+The SQLite queue tracks experiment/parameter/model/strategy search budget. A
+sealed holdout firewall prevents reuse, and all critical decisions are
+hash-journaled. No agent has research, risk, deployment and execution authority.
+
 ## 2. Package map
 
 ```
@@ -61,9 +72,17 @@ serein/
 │   ├── models.py       LR / RF / GBM with governance metadata + purged WFA
 │   └── calibration.py  reliability curves, ECE, Brier, Platt/isotonic
 ├── drift.py            PSI feature drift, CUSUM performance drift, slippage drift
+├── health.py           ACTIVE/DEGRADED/QUARANTINED strategy-health decisions
+├── autonomy/           research/red-team/review agents, queue, factory, authority
+├── holdout.py          irreversible sealed/revealed holdout firewall
+├── opportunity.py      post-cost EV ranking with hard eligibility gates
+├── promotion.py        strict real-data/paper promotion certification gate
+├── audit_journal.py    tamper-evident decision journal
 ├── registry.py         append-only experiment + model registries (JSONL)
 ├── execution/
-│   ├── broker.py       BrokerInterface + PaperBroker (fills, partials, failure injection)
+│   ├── broker.py       BrokerInterface + PaperBroker (fills, partials, reconciliation)
+│   ├── gateway.py      approved paper-order gateway + idempotency
+│   ├── shadow.py       no-order shadow decision recorder
 │   └── validation.py   deterministic pre-trade checklist (gate #2)
 ├── reporting.py        markdown report generation from real artifacts
 └── dashboard.py        static HTML dashboard (equity, drawdown, monthly, journal)
@@ -113,9 +132,11 @@ level 4 (no live adapter, PAPER_TRADING_ONLY=True).
 
 ## 6. Timing & sessions
 
-- All timestamps UTC; bar index = DatetimeIndex.
-- Session features (premarket/open/midday/afternoon/close/post) are
-  derived for US-equity-style hours; the synthetic universe is
-  regular-session only.
+- External timestamps are ingested with an explicit source timezone and
+  converted to an explicit market timezone; naive timestamps are never assumed.
+  The session-aware synthetic generator is deliberately timezone-naive but
+  labeled synthetic. Bar indexes are DatetimeIndex.
+- Session features use US-equity-style regular hours; real holiday and early-
+  close calendars remain a deployment blocker.
 - Expected bar step = median of index diffs; gaps beyond that trigger
   gap-through-stop handling.

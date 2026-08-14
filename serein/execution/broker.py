@@ -32,8 +32,10 @@ class Order:
     submitted_at: pd.Timestamp | None = None
     filled_at: pd.Timestamp | None = None
     fill_price: float | None = None
+    filled_qty: int = 0
     realized_slippage_bps: float | None = None
     reject_reason: str = ""
+    idempotency_key: str = ""
 
 
 @dataclass
@@ -61,6 +63,8 @@ class BrokerInterface(ABC):
     @abstractmethod
     def get_positions(self) -> dict: ...
     @abstractmethod
+    def get_orders(self) -> list[Order]: ...
+    @abstractmethod
     def get_quotes(self, symbols: list[str]) -> dict: ...
     @abstractmethod
     def submit_order(self, order: Order) -> Order: ...
@@ -73,6 +77,8 @@ class BrokerInterface(ABC):
     def get_order_status(self, order_id: str) -> Order | None: ...
     @abstractmethod
     def get_trade_history(self, since: pd.Timestamp | None = None) -> list: ...
+    @abstractmethod
+    def reconcile(self, local_positions: dict, local_order_ids: set[str]) -> dict: ...
 
 
 class PaperBroker(BrokerInterface):
@@ -96,6 +102,9 @@ class PaperBroker(BrokerInterface):
     def get_positions(self) -> dict:
         return dict(self.account.positions)
 
+    def get_orders(self) -> list[Order]:
+        return list(self.account.orders)
+
     def get_quotes(self, symbols: list[str]) -> dict:
         out = {}
         for s in symbols:
@@ -108,10 +117,18 @@ class PaperBroker(BrokerInterface):
             spread = self.cfg.costs.half_spread_bps * 2 / 1e4
             out[s] = {"bid": close * (1 - spread / 2),
                       "ask": close * (1 + spread / 2),
+                      "spread_bps": self.cfg.costs.half_spread_bps * 2,
                       "time": self._clock}
         return out
 
     def submit_order(self, order: Order) -> Order:
+        if order.idempotency_key and any(
+            x.idempotency_key == order.idempotency_key for x in self.account.orders
+        ):
+            order.status = "REJECTED"
+            order.reject_reason = "duplicate idempotency key"
+            self.account.orders.append(order)
+            return order
         self._order_seq += 1
         if not self._healthy:
             order.status = "REJECTED"
@@ -148,16 +165,18 @@ class PaperBroker(BrokerInterface):
             order.reject_reason = "no fill (partial fill ratio 0)"
             self.account.orders.append(order)
             return order
-        self.account.cash -= side * fill * qty_filled
+        commission = cost.commission * qty_filled / order.qty
+        self.account.cash -= side * fill * qty_filled + commission
         self.account.positions[order.symbol] = (
             self.account.positions.get(order.symbol, 0) + side * qty_filled
         )
+        order.filled_qty = qty_filled
         order.status = "FILLED" if qty_filled == order.qty else "PARTIAL"
         self.account.orders.append(order)
         self.account.trades.append({
             "order_id": order.order_id, "symbol": order.symbol, "side": order.side,
             "qty": qty_filled, "fill_price": fill, "filled_at": next_t,
-            "slippage_bps": cost.cost_bps,
+            "slippage_bps": cost.cost_bps, "commission": commission,
         })
         return order
 
@@ -187,6 +206,19 @@ class PaperBroker(BrokerInterface):
         if since is None:
             return list(self.account.trades)
         return [t for t in self.account.trades if t["filled_at"] >= since]
+
+    def reconcile(self, local_positions: dict, local_order_ids: set[str]) -> dict:
+        broker_positions = self.get_positions()
+        broker_ids = {o.order_id for o in self.account.orders if o.order_id}
+        position_match = broker_positions == local_positions
+        missing_local = sorted(broker_ids-local_order_ids)
+        unknown_local = sorted(local_order_ids-broker_ids)
+        return {"ok": position_match and not missing_local and not unknown_local,
+                "position_match": position_match,
+                "broker_positions": broker_positions,
+                "local_positions": dict(local_positions),
+                "missing_local_order_ids": missing_local,
+                "unknown_local_order_ids": unknown_local}
 
     # ------------------------------------------------------------- control
     def set_clock(self, t: pd.Timestamp) -> None:

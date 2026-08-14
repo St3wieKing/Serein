@@ -1,5 +1,8 @@
 # Strategy Zoo Report — "Every strategy we can find, tested honestly"
 
+> **Superseded performance artifact:** generated before the 2026-08-14 exit-fill
+> slippage accounting correction. Strategy rankings/returns require regeneration.
+
 **Date:** 2026-08-14 · **Data:** SYNTHETIC regime-switching simulator,
 8 years hourly (70,129 bars × 3 symbols), planted trend/reversion/breakout
 structure. Full tables: `artifacts/zoo_report.md`, `zoo_leaderboard.csv`,

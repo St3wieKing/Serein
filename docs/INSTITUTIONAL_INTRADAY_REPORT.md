@@ -11,15 +11,16 @@ falsifiable strategy from public institutional principles and academic evidence,
 then tried to destroy it.
 
 The validation-selected logistic meta-model looked excellent in validation
-(+2.38%, Sharpe 7.84 on synthetic data) and then failed on locked OOS (−0.03%,
-Sharpe −0.24, PF 0.94). This is a live demonstration of why impressive ML
+(+1.80%, Sharpe 5.95 on synthetic data) and then failed on locked OOS (−0.13%,
+Sharpe −1.14, PF 0.76). This is a live demonstration of why impressive ML
 validation is not enough.
 
-The predeclared opening-range component was strongest on OOS (+1.47%, Sharpe
-4.81, 57 trades), but it was discovered by inspecting OOS ablations and is
-therefore selection-contaminated. It remained profitable at 5× general costs but
-lost at 5× slippage. Across five fresh synthetic seeds, four were profitable and
-one lost. It is a challenger for future real-data testing, not an approved edge.
+The predeclared opening-range component was strongest on OOS (+1.07%, Sharpe
+3.48, 57 trades), but it was discovered by inspecting OOS ablations and is
+therefore selection-contaminated. After correcting exit-slippage accounting it
+failed 5× costs, effectively broke even at 2× slippage, and lost at 5× slippage.
+Across five fresh synthetic seeds, four were profitable and one lost. It is a
+research challenger, not an approved edge.
 
 ## Architecture
 
@@ -90,36 +91,37 @@ rate. Both models were valid to fit; neither established durable OOS value.
 
 | Candidate | Trades | Return | Sharpe | Max DD | Win rate | PF | Expectancy |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| Full rule router | 13 | −0.29% | −1.39 | −0.42% | 23.1% | 0.39 | −0.36R |
-| Logistic meta-filter | 15 | −0.03% | −0.24 | −0.28% | 46.7% | 0.94 | 0.00R |
-| Gradient-boosting meta-filter | 17 | +0.01% | 0.10 | −0.25% | 47.1% | 1.03 | +0.03R |
-| Opening-range ablation | 57 | +1.47% | 4.81 | −0.51% | 63.2% | 2.36 | +0.40R |
-| VWAP pullback ablation | 25 | −0.28% | −1.40 | −0.40% | 36.0% | 0.63 | −0.15R |
-| VWAP reversion ablation | 12 | −0.06% | −0.67 | −0.14% | 50.0% | 0.82 | −0.12R |
+| Full rule router | 13 | −0.38% | −1.79 | −0.45% | 23.1% | 0.30 | −0.48R |
+| Logistic meta-filter | 15 | −0.13% | −1.14 | −0.32% | 46.7% | 0.76 | −0.13R |
+| Gradient-boosting meta-filter | 17 | −0.10% | −0.77 | −0.31% | 47.1% | 0.77 | −0.11R |
+| Opening-range ablation | 57 | +1.07% | 3.48 | −0.54% | 63.2% | 1.87 | +0.28R |
+| VWAP pullback ablation | 25 | −0.45% | −2.28 | −0.52% | 36.0% | 0.48 | −0.28R |
+| VWAP reversion ablation | 12 | −0.14% | −1.69 | −0.16% | 50.0% | 0.59 | −0.27R |
 
-PBO across three candidate configurations was 15%, but three candidates and six
+PBO across three candidate configurations was 20%, but three candidates and six
 subperiods are too small for strong inference.
 
 ## Opening-range challenger stress
 
 | Shock | Return | Sharpe | PF / note |
 |---|---:|---:|---|
-| Baseline | +1.47% | 4.81 | PF 2.36 |
-| Costs ×2 | +1.26% | 4.11 | PF 2.09 |
-| Costs ×5 | +0.45% | 1.41 | PF 1.27 |
-| Slippage ×2 | +0.90% | 2.89 | positive |
-| Slippage ×5 | **−0.43%** | −1.25 | fails |
-| 1-bar latency | +1.16% | 3.82 | positive |
-| 3-bar latency | +0.92% | 3.33 | positive |
+| Baseline | +1.07% | 3.48 | PF 1.87 |
+| Costs ×2 | +0.69% | 2.23 | PF 1.50 |
+| Costs ×5 | **−0.61%** | −2.76 | fails |
+| Slippage ×2 | +0.003% | 0.01 | effectively no edge |
+| Slippage ×5 | **−0.91%** | −3.87 | fails |
+| 1-bar latency | +0.77% | 2.53 | positive |
+| 3-bar latency | +0.58% | 2.07 | positive |
 
 A five-day block bootstrap on the 79 synthetic OOS days estimated a 95% return
-interval of +0.05% to +2.91% and a 2.25% probability of non-positive return.
-Trade-expectancy bootstrap over 57 trades estimated +0.11R to +0.67R. These
+interval of −0.32% to +2.44% and a 6.2% probability of non-positive return.
+Trade-expectancy bootstrap over 57 trades estimated −0.007R to +0.55R, so the
+lower expectancy bound is now negative after correct exit slippage. These
 intervals quantify this simulator sample; they do not correct the post-OOS
 selection or turn planted synthetic structure into market evidence.
 
-Fresh 120-day synthetic worlds returned −0.24%, +0.60%, +0.88%, +1.12% and
-+0.79%. One of five failed, confirming that this is not bulletproof even in the
+Fresh 120-day synthetic worlds returned −0.59%, +0.34%, +0.42%, +0.71% and
++0.20%. One of five failed, confirming that this is not bulletproof even in the
 simulator that contains planted trends.
 
 ## Capital-preservation controls
