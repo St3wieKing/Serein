@@ -101,5 +101,6 @@ EXIT_TARGET_GAP = "target_gap"   # price gapped through the target during missin
 EXIT_TRAIL = "trailing_stop"
 EXIT_TIME = "max_holding_bars"
 EXIT_SIGNAL = "signal_invalidation"
+EXIT_SESSION = "session_close"
 EXIT_RISK = "risk_forced"
 EXIT_MANUAL = "manual"

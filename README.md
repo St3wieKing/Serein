@@ -22,9 +22,10 @@ constant.
 | Strategy hypothesis/component matrices | `research/strategy_matrix.md`, `research/component_library_v2.md` |
 | Strategy v2 final rebuild report | `docs/FINAL_REBUILD_REPORT.md` |
 | Quantum Athena account forensics + safe proxy | `docs/QUANTUM_ATHENA_FORENSIC_REPORT.md`, `scripts/analyze_quantum_athena.py` |
+| Quant-fund research + institutional intraday system | `research/quant_fund_research.md`, `docs/INSTITUTIONAL_INTRADAY_REPORT.md`, `scripts/run_institutional_intraday.py` |
 | Core package | `serein/` (data, features, regimes, strategies, meta, risk, backtest, ML, drift, registries, execution, reporting, dashboard) |
 | Full research pipeline | `scripts/run_research.py` |
-| Test suite (111 passing, 1 skipped) | `tests/` |
+| Test suite (116 passing, 1 skipped) | `tests/` |
 | Architecture / security / deployment / failure docs | `docs/` |
 | Run artifacts (report, dashboard, registries) | `artifacts/` (gitignored) |
 

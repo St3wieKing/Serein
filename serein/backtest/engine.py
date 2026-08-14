@@ -245,6 +245,13 @@ class Backtester:
                         exit_px, exit_reason = pos.target, C.EXIT_TARGET
                 if exit_px is None and pos.bars_held >= cfg.max_holding_bars:
                     exit_px, exit_reason = cl, C.EXIT_TIME
+                # Optional strategy-level session liquidation. This is checked
+                # after protective stop/target logic, so risk exits retain
+                # precedence. It makes NO_OVERNIGHT a testable hard behavior.
+                if exit_px is None:
+                    sf = signals.get(sym)
+                    if sf is not None and t in sf.index and bool(sf.loc[t].get("force_flat", False)):
+                        exit_px, exit_reason = cl, C.EXIT_SESSION
                 if exit_px is not None:
                     cash, trades, consecutive_losses = self._close_position(
                         pos, exit_px, t, exit_reason, cash, trades, consecutive_losses,

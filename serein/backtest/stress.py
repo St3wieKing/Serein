@@ -106,8 +106,18 @@ def stress_latency(
     """Delay every decision by k bars (signal row used k bars later)."""
     rows = []
     for k in delays:
-        shifted = {s: sig.shift(k) for s, sig in signals.items()}
-        shifted = {s: sig.dropna() for s, sig in shifted.items()}
+        shifted = {}
+        for s, sig in signals.items():
+            delayed = sig.copy()
+            move = [c for c in ("direction", "confidence", "expected_R", "horizon_bars",
+                                 "regime_ok", "reason", "stop_price", "target_price")
+                    if c in sig.columns]
+            for c in move:
+                delayed[c] = sig[c].shift(k)
+            # Session liquidation and other safety controls are never delayed.
+            # Drop only rows whose required delayed alpha fields are missing.
+            delayed = delayed.dropna(subset=[c for c in ("direction", "confidence") if c in delayed])
+            shifted[s] = delayed
         res = Backtester(cfg).run(bars, shifted)
         rows.append({
             "shock": f"latency {k} bars",

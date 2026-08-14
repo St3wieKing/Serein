@@ -40,6 +40,13 @@ Tier key:
 | S24 | SignalStart Quantum Athena 289445 | 4 | 2025-2026 | 2026-08-14 | Vendor explicitly describes six-strategy XAUUSD trend-following grid; ten recent public trades | Medium-high for description/trade rows |
 | S25 | MQL5 Quantum Athena product 173058 | 4 | 2026 | 2026-08-14 | Original product no longer available for purchase | High for listing status; reason unknown |
 | S26 | Third-party Athena reviews/backtests (FXProSystems, ForexRobotLab, CheaperForex) | 5 | 2026 | 2026-08-14 | Conflicting claims about grid blow-ups, historical tests and product quality | Low; allegations/marketing only |
+| S27 | Citadel Equity Quantitative Research official page | 3 | current | 2026-08-14 | Structural analysis, rigorous statistics, diverse data, flows, systematic/semi-systematic equities | High for public process; no strategy disclosure |
+| S28 | Citadel leadership/risk official pages | 3 | current | 2026-08-14 | Central portfolio committee and risk-tolerance oversight | High for governance principle |
+| S29 | Citadel Securities official quantitative research pages | 3 | current | 2026-08-14 | ML/AI, compute and quantitative models support market making | High for public process; exact models unknown |
+| S30 | Two Sigma official about/research pages | 3 | current | 2026-08-14 | Scientific method, ML, data, real-time risk monitoring and execution optimization | High for public process; exact models unknown |
+| S31 | Hurst, Ooi & Pedersen, “A Century of Evidence on Trend-Following Investing” | 1 | 2017 | 2026-08-14 | Multi-horizon diversified TSMOM with volatility scaling and costs across 100+ years | High; not intraday evidence |
+| S32 | Man AHL public trend-following research/interviews | 3 | 2014-2017 | 2026-08-14 | MA/breakout trend core, broad market diversification, complementary non-trend strategies | Medium-high for historical public process |
+| S33 | Baltussen et al., “Hedging Demand and Market Intraday Momentum,” JFE | 1 | 2021 | 2026-08-14 | Conditional relationship between earlier and last-hour market returns | High as academic result; tradability is sample/cost dependent |
 
 **Staleness policy:** market-structure numbers (spreads, costs) are
 re-verified at research milestones; anything older than 12 months is
