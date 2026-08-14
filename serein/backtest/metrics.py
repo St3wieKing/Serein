@@ -142,9 +142,23 @@ def compute_metrics(eq_df: pd.DataFrame, trades_df: pd.DataFrame,
         m["best_month"] = float(monthly.max()) if len(monthly) else np.nan
         m["weekly_returns"] = [round(x, 6) for x in weekly.tolist()]
         m["monthly_returns"] = [round(x, 6) for x in monthly.tolist()]
-        # daily return tail
-        m["daily_ret_skew"] = float(rets.skew()) if len(rets) > 3 else np.nan
-        m["daily_ret_kurtosis"] = float(rets.kurt()) if len(rets) > 3 else np.nan
+        # Daily/weekly consistency is reported as a distribution, never as a
+        # forced profit target. Calendar resampling is explicit; days without
+        # an equity observation are not invented.
+        daily = eq_s.resample("D").last().dropna().pct_change().dropna()
+        m["daily_ret_skew"] = float(daily.skew()) if len(daily) > 3 else np.nan
+        m["daily_ret_kurtosis"] = float(daily.kurt()) if len(daily) > 3 else np.nan
+        m["profitable_days_pct"] = float((daily > 0).mean()) if len(daily) else np.nan
+        m["daily_mean"] = float(daily.mean()) if len(daily) else np.nan
+        m["daily_median"] = float(daily.median()) if len(daily) else np.nan
+        m["worst_day"] = float(daily.min()) if len(daily) else np.nan
+        five_day = (1.0 + daily).rolling(5).apply(np.prod, raw=True) - 1.0
+        m["worst_five_day"] = float(five_day.min()) if five_day.notna().any() else np.nan
+        m["profitable_weeks_pct"] = float((weekly > 0).mean()) if len(weekly) else np.nan
+        m["weekly_median"] = float(weekly.median()) if len(weekly) else np.nan
+        for label, q in (("p05", .05), ("p25", .25), ("p75", .75), ("p95", .95)):
+            m[f"daily_{label}"] = float(daily.quantile(q)) if len(daily) else np.nan
+            m[f"weekly_{label}"] = float(weekly.quantile(q)) if len(weekly) else np.nan
 
     m["start"] = str(eq.index[0])
     m["end"] = str(eq.index[-1])

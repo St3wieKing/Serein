@@ -11,6 +11,11 @@ Schema:
   horizon_bars  int         expected holding period in bars
   regime_ok     bool        strategy's own regime gate
   reason        str         short human-readable reason (for the journal)
+
+Optional execution fields:
+  stop_price    float       objective thesis invalidation known at decision time
+  target_price  float       realistic objective known at decision time
+If absent, the backtester uses the locked ATR stop and R-multiple target.
 """
 
 from __future__ import annotations

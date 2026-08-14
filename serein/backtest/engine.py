@@ -151,11 +151,17 @@ class Backtester:
                     fill = slippage_adjusted_price(open_px, o.direction, cost.cost_bps)
                     if fill <= 0 or not np.isfinite(fill):
                         continue
-                    stop_dist = abs(fill - o.stop)
-                    if stop_dist / fill <= 0.002:
-                        continue  # degenerate stop -> reject silently
-                    stop = o.stop if o.direction > 0 else fill + stop_dist
-                    target = o.target if o.direction > 0 else fill - stop_dist * cfg.target_rr
+                    # Preserve the strategy's structural invalidation and target.
+                    # If the next open gaps beyond either, the planned trade no
+                    # longer exists: reject rather than silently manufacture a
+                    # different stop or chase an already-reached target.
+                    stop, target = o.stop, o.target
+                    stop_dist = abs(fill - stop)
+                    stop_correct_side = (fill - stop) * o.direction > 0
+                    target_correct_side = (target - fill) * o.direction > 0
+                    if (stop_dist / fill <= 0.002 or not stop_correct_side
+                            or not target_correct_side):
+                        continue
                     if stop <= 0 or target <= 0:
                         continue
                     # booking (exact accounting): the fill price embeds
@@ -308,10 +314,25 @@ class Backtester:
                     atr = atr_map[sym].get(t)
                     if atr is None or atr <= 0 or not np.isfinite(atr):
                         continue
+                    # Strategies may provide an objective structural stop and
+                    # target.  Missing/invalid optional fields fall back to the
+                    # locked ATR/R defaults.  Risk sizing always uses the actual
+                    # planned stop distance.
+                    default_stop = close_px - direction * cfg.stop_atr_mult * atr
+                    stop_raw = s.get("stop_price", np.nan)
+                    stop = float(stop_raw) if pd.notna(stop_raw) else default_stop
+                    if stop <= 0 or (close_px - stop) * direction <= 0:
+                        continue
+                    stop_distance = abs(close_px - stop)
+                    default_target = close_px + direction * stop_distance * cfg.target_rr
+                    target_raw = s.get("target_price", np.nan)
+                    target = float(target_raw) if pd.notna(target_raw) else default_target
+                    if target <= 0 or (target - close_px) * direction <= 0:
+                        continue
                     qty = size_position(
                         equity=equity,
                         entry=close_px,
-                        stop_distance=cfg.stop_atr_mult * atr,
+                        stop_distance=stop_distance,
                         confidence=float(s["confidence"]),
                         expected_R=float(s["expected_R"]),
                         params=cfg.sizing,
@@ -321,8 +342,6 @@ class Backtester:
                     )
                     if qty <= 0:
                         continue
-                    stop = close_px - direction * cfg.stop_atr_mult * atr
-                    target = close_px + direction * cfg.stop_atr_mult * atr * cfg.target_rr
                     ok, msg = self.risk.check_entry(
                         symbol=sym, direction=direction, qty=qty,
                         entry=close_px, stop=stop, equity=equity,

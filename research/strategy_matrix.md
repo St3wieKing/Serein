@@ -27,6 +27,10 @@ Scoring: 1 (weak) – 5 (strong).
 | H15 | PBO/CSCV on parameter selection | S04 | N/A (method) | High | N/A | Med | N/A | N/A | SUPPORTED — implemented |
 | H16 | Purged labels with horizon>1 need embargo | S05 | N/A (method) | High | N/A | Low | N/A | N/A | SUPPORTED |
 | H17 | Retail-scale intraday alpha survives ~15-20bps round-trip | S06 | Very low prior | High | Med | N/A | Med | High | NOT ESTABLISHED — the central open question |
+| H18 | Trend pullback + objective continuation trigger | Grimes S21 + momentum prior S01/S02 | Low | High | Med | Low | High | Med | TESTED v2 synthetic: A isolated OOS positive but full/stress/kill-switch failed; B–D negative OOS → REJECT current specification |
+| H19 | Failed range break + re-entry confirmation | Grimes S21; generic microstructure hypothesis | Low | High | Med | Low | Med | Med | TESTED v2 quick synthetic: OOS Sharpe −1.16 → REJECT current specification |
+| H20 | Session VWAP extreme turns inward | Practitioner hypothesis | Low | High | Low-Med | Low | Med | High in trends | TESTED v2 quick synthetic: OOS Sharpe −0.38, 42 trades → REJECT current specification |
+| H21 | Compression + lagged range break | Practitioner hypothesis; expansion mechanism | Low | High | Med | Low | Med | High false-break risk | TESTED v2 synthetic: OOS Sharpe +0.56 but only 21 trades → INCONCLUSIVE, fails sample gate |
 
 ## Ranking for next experiments (by value-of-information per unit cost)
 

@@ -30,6 +30,11 @@ Tier key:
 | S14 | Cont, "Empirical properties of asset returns" 2001 | 1 | 2001 | (domain knowledge) | Volatility clustering stylized fact | High |
 | S15 | Kelly, "A New Interpretation of Information Rate" 1956 | 1 | 1956 | (domain knowledge) | Fractional-Kelly sizing baseline | High (theory) |
 | S16 | SEC market access rule (15c3-5) | 1 | 2010 | (domain knowledge) | Pre-trade risk controls & erroneous-order prevention | High |
+| S17 | Matthew Scriv public Snapchat clip (pre-marked level / no trend-line statement) | 4 | 2026-03-01 | 2026-08-14 | Public positioning and statements only; not performance evidence | Medium for exact public statement; none for edge |
+| S18 | Matthew Scriv public Snapchat trade walkthrough | 4 | 2025-07-24 | 2026-08-14 | Public entry/stop/target walkthrough exists | Medium for existence; rules incomplete |
+| S19 | Reddit thread on Matthew Scriv / “Chrome” | 5 | 2026-03-19 | 2026-08-14 | Anonymous OTE/IFVG/ICT interpretation | Very low; hypothesis-generation only |
+| S20 | Sullivan, Timmermann & White, “Data-Snooping, Technical Trading Rule Performance, and the Bootstrap,” JF 1999 | 1 | 1999 | 2026-08-14 | Technical-rule selection must adjust for the entire searched universe | High |
+| S21 | Grimes, *The Art and Science of Technical Analysis*, Wiley | 3 | 2012 | 2026-08-14 | Pullback/failure/breakout templates and testable market-structure framing | Medium; practitioner hypothesis source |
 
 **Staleness policy:** market-structure numbers (spreads, costs) are
 re-verified at research milestones; anything older than 12 months is

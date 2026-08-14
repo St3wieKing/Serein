@@ -17,12 +17,13 @@ constant.
 | Area | Where |
 |---|---|
 | Research decision log (335 Q&A) | `research/decision_log/` |
-| Athena (SwingTradingLab) public-info analysis | `research/athena_analysis.md` |
-| Literature & source register | `research/literature_notes.md`, `research/source_register.md` |
-| Strategy hypothesis matrix | `research/strategy_matrix.md` |
+| Public-method analyses | `research/athena_analysis.md`, `research/matthew_scriv_analysis.md` |
+| Literature, books & source register | `research/literature_notes.md`, `research/trading_book_analysis.md`, `research/source_register.md` |
+| Strategy hypothesis/component matrices | `research/strategy_matrix.md`, `research/component_library_v2.md` |
+| Strategy v2 final rebuild report | `docs/FINAL_REBUILD_REPORT.md` |
 | Core package | `serein/` (data, features, regimes, strategies, meta, risk, backtest, ML, drift, registries, execution, reporting, dashboard) |
 | Full research pipeline | `scripts/run_research.py` |
-| Test suite (61 tests) | `tests/` |
+| Test suite (108 passing, 1 skipped as of v2 quick validation) | `tests/` |
 | Architecture / security / deployment / failure docs | `docs/` |
 | Run artifacts (report, dashboard, registries) | `artifacts/` (gitignored) |
 
@@ -56,8 +57,9 @@ robust edge exists — not to manufacture the appearance of one.
 ```bash
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
-.venv/bin/python scripts/run_research.py --quick   # smoke run (~80s)
-.venv/bin/python -m pytest tests/ -q               # test suite
+.venv/bin/python scripts/run_research.py --quick      # v1 smoke run
+.venv/bin/python scripts/rebuild_strategy.py          # v2 controlled quick run
+.venv/bin/python -m pytest tests/ -q                  # test suite
 .venv/bin/python scripts/validate_questions.py     # decision-log check
 ```
 
